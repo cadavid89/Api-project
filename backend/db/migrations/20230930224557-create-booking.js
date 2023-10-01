@@ -32,13 +32,13 @@ module.exports = {
       startDate: {
         type: Sequelize.DATE,
         allowNull: false,
-        validate: {
-          validateStart(val){
-            if (val < startDate) {
-              throw new Error('Must Enter Valid Date')
-            }
-          }
-        }
+        // validate: {
+        //   validateStart(val){
+        //     if (val < startDate) {
+        //       throw new Error('Must Enter Valid Date')
+        //     }
+        //   }
+        // }
       },
       endDate: {
         type: Sequelize.DATE,
