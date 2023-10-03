@@ -4,7 +4,7 @@ const router = express.Router();
 const sequelize = require("sequelize");
 const { requireAuth } = require("../../utils/auth");
 
-
+//Get all Spots
 router.get('/', async (req,res,next) => {
   const spots = await Spot.findAll({
     include: [
@@ -43,7 +43,7 @@ router.get('/', async (req,res,next) => {
 
 })
 
-
+//Get all Spots owned by the Current User
 router.get('/current', requireAuth, async (req, res, next) => {
   const { user } = req
   const spots = await Spot.findAll({
@@ -88,7 +88,8 @@ return res.json({
 })
 })
 
-router.get('/:spotId', async (req,res) => {
+//Get details of a Spot from an id
+router.get('/:spotId', async (req,res, next) => {
   const id = req.params.spotId
 
   const spot = await Spot.unscoped().findByPk(id)
@@ -142,6 +143,11 @@ router.get('/:spotId', async (req,res) => {
     })
 
     return res.json(spotJson)
+})
+
+//Create a spot
+router.post('/', requireAuth, (req,res,next) => {
+
 })
 
 module.exports = router;
