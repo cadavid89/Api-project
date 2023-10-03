@@ -108,6 +108,14 @@ router.get('/:spotId', async (req,res) => {
     }
   })
 
+    const count = await Review.count({
+      where: {
+        spotId: spot.id
+      }
+    })
+
+    spotJson.numReviews = count
+
     const avgStarRating = await Review.sum('stars', {
       where: {
         spotId: spot.id
@@ -119,7 +127,9 @@ router.get('/:spotId', async (req,res) => {
     const image = await SpotImage.findAll({
       where: {
         spotId: spot.id,
-
+      },
+      attributes: {
+        exclude: ['createdAt', 'updatedAt', 'spotId']
       }
     })
 
