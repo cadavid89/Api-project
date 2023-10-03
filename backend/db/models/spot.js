@@ -18,20 +18,14 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'spotId'
       })
 
-      Spot.belongsToMany(models.User, {
-        through: models.Booking,
-        foreignKey: 'spotId',
-        otherKey: 'userId'
+      Spot.hasMany(models.Booking, {
+        foreignKey: 'spotId'
       })
 
-      Spot.belongsToMany(models.User, {
-        through: models.Review,
-        foreignKey: 'spotId',
-        otherKey: 'userId'
+      Spot.hasMany(models.Review, {
+        foreignKey: 'spotId'
       })
     }
-
-
 
   }
   Spot.init({
@@ -60,7 +54,7 @@ module.exports = (sequelize, DataTypes) => {
     },
 
     lat: {
-      type: DataTypes.DECIMAL,
+      type: DataTypes.DECIMAL(10,7),
       validate: {
         min: -90.0000000,
         max: 90.0000000
@@ -68,7 +62,7 @@ module.exports = (sequelize, DataTypes) => {
     },
 
     lng: {
-      type: DataTypes.DECIMAL,
+      type: DataTypes.DECIMAL(10,7),
       validate: {
        min: -180.0000000,
        max: 180.0000000
