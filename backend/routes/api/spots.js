@@ -127,7 +127,7 @@ return res.json({
 router.get('/:spotId', async (req,res, next) => {
   const id = req.params.spotId
 
-  const spot = await Spot.unscoped().findByPk(id)
+  const spot = await Spot.findByPk(id)
 
    if(!spot) {
     res.status(404);
@@ -203,7 +203,7 @@ res.status(201)
 })
 
 //Add an Image to a Spot based on the Spot's id
-router.post('/:spotId/images', requireAuth, async(req,res) => {
+router.post('/:spotId/images', requireAuth, async(req,res,next) => {
   const id = req.params.spotId;
   const currentUser = req.user.id;
   const spot = await Spot.findByPk(id)
@@ -239,9 +239,42 @@ res.json({
   url: newImage.url,
   preview: newImage.preview
 })
+})
 
+//Edit a spot
+router.put('/:spotId', [requireAuth, validateSpot], async(req,res) => {
+  const { address, city, state, country, lat, lng, name, description, price } = req.body;
+  const { user } = req;
+  const id = req.params.spotId
+  const spot = await Spot.findByPk(id)
 
+  if(spot.ownerId !== user.id) {
+    res.status(403);
+    return res.json({
+      message: "Nacho house"
+    })
+  }
 
+  if(!spot){
+    res.status(404);
+    return res.json({
+      message: "Spot couldn't be found"
+    })
+  }
+
+  spot.address = address
+  spot.city = city
+  spot.state = state
+  spot.country = country
+  spot.lat = lat
+  spot.lng = lng
+  spot.name = name
+  spot.description = description
+  spot.price = price
+
+  await spot.save()
+
+  return res.json(spot)
 })
 
 module.exports = router;
