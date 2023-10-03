@@ -37,6 +37,8 @@ const validateSpot = [
   handleValidationErrors
 ];
 
+
+
 //Get all Spots
 router.get('/', async (req,res,next) => {
   const spots = await Spot.findAll({
@@ -198,6 +200,27 @@ router.post('/', [requireAuth, validateSpot], async (req,res,next) => {
 
 newSpot.ownerId = user.id
  return res.json(newSpot)
+})
+
+//Add an Image to a Spot based on the Spot's id
+router.post('/:spotId/images', requireAuth, async(req,res) => {
+  const { url, preview } = req.body;
+  const id = req.params.spotId;
+  const currentUser = req.userId;
+  const spot = Spot.findByPk(id)
+
+  if(spot.ownerId !== currentUser || !spot){
+    res.status(404)
+    return res.json({
+      message: 'Spot couldn\'t be found'
+    })
+  }
+
+
+
+
+
+
 })
 
 module.exports = router;
