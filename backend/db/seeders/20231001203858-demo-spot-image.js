@@ -47,14 +47,36 @@ module.exports = {
         preview: false,
       },
 
+      {
+        spotId: 4,
+        url: 'fourthspot1.com',
+        preview: false,
+      },
+
+      {
+        spotId: 4,
+        url: 'fourthspot.com',
+        preview: true,
+      },
+
+      {
+        spotId: 5,
+        url: 'fifthspot1.com',
+        preview: true,
+      },
+
+      {
+        spotId: 5,
+        url: 'fifthspot.com',
+        preview: false,
+      },
+
     ])
   },
 
   async down (queryInterface, Sequelize) {
     options.tableName = 'SpotImages';
     const Op = Sequelize.Op
-    return queryInterface.bulkDelete(options, {
-     spotId: { [Op.in]: [1, 2, 3] }
-    }, {});
+    return queryInterface.bulkDelete(options);
    }
 };

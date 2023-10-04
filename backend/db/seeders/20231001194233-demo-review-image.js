@@ -69,6 +69,16 @@ module.exports = {
     {
       reviewId: 3, //ATL
       url: 'https://ap.rdcpix.com/b07f9fc8dc0a21efcd1efe460391c7d3l-m1149231117od-w480_h360.jpg'
+    },
+
+    {
+      reviewId: 4, //NY
+      url: 'nyspot.com/1'
+    },
+
+    {
+      reviewId: 5, //MIA
+      url: 'miaspot.com/1'
     }
    ])
   },
@@ -76,8 +86,6 @@ module.exports = {
   async down (queryInterface, Sequelize) {
     options.tableName = 'ReviewImages';
     const Op = Sequelize.Op
-    return queryInterface.bulkDelete(options, {
-      reviewId: { [Op.in]: [1,2,3] }
-    }, {})
+    return queryInterface.bulkDelete(options)
   }
 };

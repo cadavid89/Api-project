@@ -48,17 +48,39 @@ module.exports = {
         name: 'Stylish loft',
         description: 'Loft that sleeps 6',
         price: 189.99
+      },
+
+      {
+        ownerId: 1,
+        address: '68 Bayview Dr',
+        city: 'Miami',
+        state: 'Florida',
+        country: 'United States',
+        lat: 25.761744,
+        lng: 80.191844,
+        name: 'Minimalist Dream',
+        description: 'Minimalist spot in high rise',
+        price: 200.22
+      },
+
+      {
+        ownerId: 2,
+        address: '7264 W Sunset Blvd',
+        city: 'Los Angles',
+        state: 'California',
+        country: 'United States',
+        lat: 34.054944,
+        lng: 34.054944,
+        name: 'Mega mansion',
+        description: 'Sleeps 10 in great area',
+        price: 360.33
       }
-
-
     ], {validate: true})
   },
 
   async down (queryInterface, Sequelize) {
     options.tableName = 'Spots';
     const Op = Sequelize.Op;
-    return queryInterface.bulkDelete(options, {
-      address: { [Op.in]: ['123 Main Street', '456 East Road', '789 Broadway Avenue'] }
-    }, {});
+    return queryInterface.bulkDelete(options);
   }
 };
