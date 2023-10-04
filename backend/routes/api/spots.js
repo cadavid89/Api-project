@@ -272,7 +272,7 @@ router.put('/:spotId', [requireAuth, validateSpot], async(req,res) => {
       message: "Spot couldn't be found"
     })
   }
-  
+
   if(spot.ownerId !== user.id) {
     res.status(403);
     return res.json({
@@ -294,6 +294,33 @@ router.put('/:spotId', [requireAuth, validateSpot], async(req,res) => {
   await spot.save()
 
   return res.json(spot)
+})
+
+router.delete('/:spotId', requireAuth, async (req,res,next) => {
+  const id = req.params.spotId
+  const { user } = req
+  const spot = await Spot.findByPk(id)
+
+  if(!spot || !user){
+    res.status(404);
+    return res.json({
+      message: "Spot couldn't be found"
+    })
+  }
+
+  if(spot.ownerId !== user.id) {
+    res.status(403);
+    return res.json({
+      message: "Nacho house"
+    })
+  }
+
+  await spot.destroy();
+
+  res.json({
+    message: "Successfully deleted"
+  })
+
 })
 
 module.exports = router;
