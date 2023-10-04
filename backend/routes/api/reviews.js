@@ -34,5 +34,50 @@ router.get('/current', requireAuth, async (req, res, next)  => {
         "Reviews": reviews})
 })
 
+router.post('/:reviewId/images', requireAuth, async(req,res,next) => {
+    const id = req.params.reviewId
+    const { user } = req
+    const review = await Review.findByPk(id)
+
+    const imageCount = await ReviewImage.count({
+        where: {
+            reviewId: review.id
+        }
+    })
+
+    if (imageCount === 10) {
+        res.status(403)
+        return res.json({
+            "message": "Maximum number of images for this resource was reached"
+        })
+    }
+    if(review === null){
+        res.status(404)
+        return res.json({
+            message: "Review couldn't be found"
+        })
+    }
+
+    if(review.userId !== user.id){
+        res.status(403)
+        return res.json({
+            message: 'Nacho review'
+        })
+    }
+
+    const images = await review.getReviewImages()
+    const { url } = req.body
+
+    const newImage = await ReviewImage.create({
+        url
+    })
+
+    images.push(newImage)
+
+    res.json({
+        id: newImage.id,
+        url: newImage.url
+    })
+})
 
 module.exports = router

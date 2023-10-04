@@ -23,7 +23,7 @@ module.exports = (sequelize, DataTypes) => {
     url: {
       type: DataTypes.STRING,
       validate: {
-        isEmail: true
+        isUrl: true
       }
     }
 
