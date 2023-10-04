@@ -45,7 +45,7 @@ router.get('/', async (req,res,next) => {
     include: [
       {
         model: SpotImage,
-        attributes: ['url']
+        attributes: ['url', 'preview']
       }
     ]
   });
@@ -68,7 +68,16 @@ router.get('/', async (req,res,next) => {
     }) / reviews.length;
 
     spot.avgRating = avgStarRating;
-    spot.previewImage = spot.SpotImages[0].url
+
+    let previewImage = null
+
+    spot.SpotImages.forEach(image => {
+      if (image.preview === true){
+        previewImage = image.url
+      }
+    })
+
+    spot.previewImage = previewImage
     delete spot.SpotImages
   }
 
@@ -115,7 +124,16 @@ router.get('/current', requireAuth, async (req, res, next) => {
     }) / reviews.length;
 
     spot.avgRating = avgStarRating;
-    spot.previewImage = spot.SpotImages[0].url
+
+    let previewImage = null
+
+    spot.SpotImages.forEach(image => {
+      if (image.preview === true){
+        previewImage = image.url
+      }
+    })
+
+    spot.previewImage = previewImage
     delete spot.SpotImages
 }
 return res.json({
