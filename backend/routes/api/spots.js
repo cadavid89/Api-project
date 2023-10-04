@@ -25,7 +25,7 @@ const validateSpot = [
   check('lng')
     .isDecimal()
     .withMessage("Longitude is not valid"),
-  check('lat')
+  check('name')
     .isLength({Max: 50})
     .withMessage("Name must be less than 50 characters"),
   check('description')
@@ -37,7 +37,16 @@ const validateSpot = [
   handleValidationErrors
 ];
 
-
+const validateReviews = [
+  check('review')
+    .exists({checkFalsy: true})
+    .withMessage("Review text is required"),
+  check('stars')
+    .exists()
+    .isInt({min: 1, max: 5})
+    .withMessage("Stars must be an integer from 1 to 5"),
+  handleValidationErrors
+]
 
 //Get all Spots
 router.get('/', async (req,res,next) => {
@@ -88,7 +97,7 @@ router.get('/', async (req,res,next) => {
 })
 
 //Get all Reviews by a Spot's id
-router.get('/:spotId/reviews', requireAuth, async(req,res,next) =>{
+router.get('/:spotId/reviews', async(req,res,next) =>{
   const id = req.params.spotId
   const spot = await Spot.findByPk(id)
 
@@ -292,6 +301,23 @@ res.json({
   preview: newImage.preview
 })
 })
+
+//Create a Review for a Spot based on the Spot's id
+router.post('/:spotId/reviews', [requireAuth, validateReviews], async (req, res) => {
+  const id = req.params.spotId
+  const { user } = req;
+  const { review, stars } = req.body
+
+  const newReview = await Review.create({
+    userId: user.id,
+    spotId: id,
+    review,
+    stars
+  })
+
+  res.status(201)
+  return res.json(newReview)
+  })
 
 //Edit a spot
 router.put('/:spotId', [requireAuth, validateSpot], async(req,res) => {
