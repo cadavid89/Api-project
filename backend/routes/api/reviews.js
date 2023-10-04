@@ -80,4 +80,33 @@ router.post('/:reviewId/images', requireAuth, async(req,res,next) => {
     })
 })
 
+//Edit a review
+router.put('/:reviewId', requireAuth, async (req,res,next) => {
+    const { review, stars } = req.body
+    const { user } = req
+    const id = req.params.reviewId
+    const reviewed = await Review.findByPk(id)
+
+    if(!reviewed || !user) {
+        res.status(404);
+        res.json({
+            message: "Review couldn't be found"
+        })
+    }
+
+
+  if(reviewed.userId !== user.id) {
+    res.status(403);
+    return res.json({
+      message: "Nacho review"
+    })
+  }
+
+  reviewed.review = review
+  reviewed.stars = stars
+
+  await reviewed.save()
+  return res.json(reviewed)
+})
+
 module.exports = router
