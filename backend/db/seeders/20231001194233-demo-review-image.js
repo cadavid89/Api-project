@@ -79,6 +79,11 @@ module.exports = {
     {
       reviewId: 5, //MIA
       url: 'miaspot.com/1'
+    },
+
+    {
+      reviewId: 8,
+      url: 'thisimage.com'
     }
    ])
   },

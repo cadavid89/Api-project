@@ -14,7 +14,7 @@ module.exports = {
       {
         spotId: 1,
         url: 'firstspot1.com',
-        preview: true,
+        preview: false,
       },
 
       {

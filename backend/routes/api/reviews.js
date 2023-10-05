@@ -1,5 +1,5 @@
 const express = require("express");
-const { Spot, Review, User, ReviewImage} = require("../../db/models");
+const { Spot, Review, User, ReviewImage, SpotImage} = require("../../db/models");
 const router = express.Router();
 const sequelize = require("sequelize");
 const { requireAuth } = require("../../utils/auth");
@@ -21,7 +21,6 @@ router.get('/current', requireAuth, async (req, res, next)  => {
             {
                 model: Spot,
                 attributes: ['id', 'ownerId', 'address', 'city', 'state', 'country', 'lat', 'lng', 'name', 'price']
-
             },
             {
                 model: ReviewImage,
@@ -30,8 +29,29 @@ router.get('/current', requireAuth, async (req, res, next)  => {
         ]
     })
 
-    return res.json({
-        "Reviews": reviews})
+     const reviewObject = reviews.map(review => review.toJSON())
+     const images = await SpotImage.findAll()
+
+
+    for(let i = 0; i < reviewObject.length; i++){
+        const review = reviewObject[i]
+
+        for(let j = 0; j < images.length; j++){
+            const image = images[j]
+
+            if(image.spotId == review.spotId){
+                if (image.preview == true) {
+                    review.Spot.previewImage = image.url
+                    break;
+                } else {
+                    review.Spot.previewImage = "Image not available"
+                }
+        }
+    }
+}
+
+    res.json({
+        "Reviews": reviewObject})
 })
 
 router.post('/:reviewId/images', requireAuth, async(req,res,next) => {
@@ -61,7 +81,7 @@ router.post('/:reviewId/images', requireAuth, async(req,res,next) => {
     if(review.userId !== user.id){
         res.status(403)
         return res.json({
-            message: 'Nacho review'
+            message: "Forbidden"
         })
     }
 
@@ -98,7 +118,7 @@ router.put('/:reviewId', requireAuth, async (req,res,next) => {
   if(reviewed.userId !== user.id) {
     res.status(403);
     return res.json({
-      message: "Nacho review"
+      message: "Forbidden"
     })
   }
 
@@ -125,7 +145,7 @@ router.delete('/:reviewId', requireAuth, async(req,res) => {
       if(review.userId !== user.id) {
         res.status(403);
         return res.json({
-          message: "Nacho review"
+          message: "Forbidden"
         })
       }
 
