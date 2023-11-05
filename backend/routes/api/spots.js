@@ -422,7 +422,7 @@ router.post('/:spotId/bookings', requireAuth, async(req,res) => {
       err.errors.dateRange = "Existing booking between start and end dates"
     }
 
-    if(requestedStart > responseEnd && requestedStart >= responseStart){
+    if(requestedStart < responseEnd && requestedStart >= responseStart){
       err.errors.startDate = "Start date conflicts with an existing booking"
     }
     if(requestedEnd > responseStart && requestedEnd <= responseEnd) {

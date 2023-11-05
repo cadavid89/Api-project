@@ -9,8 +9,7 @@ const {
 const router = express.Router();
 const sequelize = require("sequelize");
 const { requireAuth } = require("../../utils/auth");
-const { check } = require("express-validator");
-const { handleValidationErrors } = require("../../utils/validation");
+const { validateReviews } = require("../../utils/errorValidators");
 
 // Get all Reviews of the Current User
 router.get("/current", requireAuth, async (req, res, next) => {
@@ -76,19 +75,20 @@ router.post("/:reviewId/images", requireAuth, async (req, res, next) => {
   const { user } = req;
   const review = await Review.findByPk(id);
 
-  const imageCount = await ReviewImage.count({
-    where: {
-      reviewId: review.id,
-    },
-  });
+  // const imageCount = await ReviewImage.count({
+  //   where: {
+  //     reviewId: review.id,
+  //   },
+  // });
 
-  if (imageCount === 10) {
-    res.status(403);
-    return res.json({
-      message: "Maximum number of images for this resource was reached",
-    });
-  }
-  if (review === null) {
+  // if (imageCount === 10) {
+  //   res.status(403);
+  //   return res.json({
+  //     message: "Maximum number of images for this resource was reached",
+  //   });
+  // }
+
+  if (!review) {
     res.status(404);
     return res.json({
       message: "Review couldn't be found",
@@ -103,6 +103,13 @@ router.post("/:reviewId/images", requireAuth, async (req, res, next) => {
   }
 
   const images = await review.getReviewImages();
+
+  if (images.length >= 10) {
+    res.status(403)
+    return res.json({
+      message: "Maximum number of images fo this resource was reached"
+    })
+  }
   const { url } = req.body;
 
   const newImage = await ReviewImage.create({
@@ -118,13 +125,13 @@ router.post("/:reviewId/images", requireAuth, async (req, res, next) => {
 });
 
 //Edit a review
-router.put("/:reviewId", requireAuth, async (req, res, next) => {
+router.put("/:reviewId",[requireAuth, validateReviews], async (req, res, next) => {
   const { review, stars } = req.body;
   const { user } = req;
   const id = req.params.reviewId;
   const reviewed = await Review.findByPk(id);
 
-  if (!reviewed || !user) {
+  if (!reviewed) {
     res.status(404);
     res.json({
       message: "Review couldn't be found",

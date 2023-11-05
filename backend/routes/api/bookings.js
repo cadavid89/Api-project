@@ -58,6 +58,8 @@ router.get('/current', requireAuth, async(req,res) => {
 router.put('/:bookingId', requireAuth, async (req, res) => {
     const id = req.params.bookingId
     const { user } = req
+    let {startDate, endDate} = req.body
+    const {bookingId} = req.params
 
     const booking = await Booking.findByPk(id)
 
@@ -74,6 +76,76 @@ router.put('/:bookingId', requireAuth, async (req, res) => {
             "message": "Forbidden"
         })
     }
+
+    const today = new Date().getTime()
+    const newStart = new Date(startDate).getTime();
+    const newEnd = new Date(endDate).getTime();
+
+    if (today > newEnd) {
+        res.status(403)
+        return res.json({
+            "message": "Past booking can't be modified"
+        })
+    }
+
+    if (new Date(startDate) >= new Date(endDate)) {
+        res.status(400)
+        res.json({
+            "message": "endDate cannot come before startDate"
+        })
+    }
+
+    const bookings = await Booking.findAll({
+        where: {
+            spotId: booking.spotId,
+            id: {[Op.ne]: booking.id}
+        }
+    })
+
+    const bookingObj = bookings.map(booking => booking.toJSON())
+
+    for (let i = 0; i < bookingObj.length; i++) {
+
+        const errors = {}
+        errors.message = "Sorry, this spot is already booked for the specified dates"
+
+        const bookingStart = new Date(booking.startDate).getTime()
+        const bookingEnd = new Date(booking.endDate).getTime()
+
+
+        if (newStart >= bookingStart && newStart < bookingEnd) {
+            errors.startDate = "Start date conflicts with an existing booking"
+        }
+
+        if (newEnd <= bookingStart && newEnd > bookingEnd) {
+            errors.endDate = "End date conflicts with an existing booking"
+        }
+
+        if (newStart < bookingStart && newEnd > bookingEnd) {
+            errors.startDate = "Start date conflicts with an existing booking"
+            errors.endDate = "End date conflicts with an existing booking"
+        }
+
+        if (errors.startDate || errors.endDate) {
+            res.status(403)
+            return res.json(errors)
+        }
+    }
+
+    if(startDate) {
+        booking.startDate = startDate
+    }
+
+    if(endDate){
+        booking.endDate = endDate
+    }
+
+    await booking.save()
+
+    res.json({
+        booking
+    })
+
 
 })
 
