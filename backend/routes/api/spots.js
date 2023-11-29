@@ -176,6 +176,8 @@ router.get('/current', requireAuth, async (req, res, next) => {
         } else {
           spot.previewImage = 'Image not available'
         }
+      } else {
+        spot.previewImage = 'Image not available'
       }
     }
 
