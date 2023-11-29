@@ -157,22 +157,27 @@ router.get('/current', requireAuth, async (req, res, next) => {
   const spots = await Spot.findAll({
     where: {
       ownerId: user.id
-    },
-    include: [
-      {
-        model: SpotImage,
-        attributes: ['url'],
-        where: {
-          preview: true
-        }
-      }
-    ]
+    }
   });
 
   const spotsJson = spots.map(spot => spot.toJSON());
+  const images = await SpotImage.findAll()
 
   for(let i = 0; i < spotsJson.length; i++){
     const spot = spotsJson[i]
+
+    for (let j = 0; j < images.length; j++){
+      const image = images[j];
+
+      if (image.spotId == spot.id) {
+        if (image.preview == true) {
+          spot.previewImage = image.url;
+          break;
+        } else {
+          spot.previewImage = 'Image not available'
+        }
+      }
+    }
 
 
     const reviews = await Review.findAll({
@@ -188,17 +193,6 @@ router.get('/current', requireAuth, async (req, res, next) => {
     }) / reviews.length;
 
     spot.avgRating = avgStarRating;
-
-    let previewImage = null
-
-    spot.SpotImages.forEach(image => {
-      if (image.preview === true){
-        previewImage = image.url
-      }
-    })
-
-    spot.previewImage = previewImage
-    delete spot.SpotImages
 }
 return res.json({
   Spots: spotsJson

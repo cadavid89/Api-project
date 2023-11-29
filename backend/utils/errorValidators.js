@@ -25,10 +25,11 @@ const validate = {
         .isLength({Max: 50})
         .withMessage("Name must be less than 50 characters"),
       check('description')
-        .exists()
+        .exists({ checkFalsy: true })
         .withMessage("Description is required"),
       check('price')
         .exists()
+        .isInt({min: 1})
         .withMessage("Price per day is required"),
       handleValidationErrors
     ],
