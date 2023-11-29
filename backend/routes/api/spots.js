@@ -257,7 +257,7 @@ router.get('/:spotId', async (req,res, next) => {
 })
 
 //Create a spot
-router.post('/', [requireAuth, validateSpot], async (req,res,next) => {
+router.post('/', [requireAuth, validateSpot, validateQuery], async (req,res,next) => {
  const { address, city, state, country, lat, lng, name, description, price} = req.body;
 
 
@@ -440,7 +440,7 @@ router.post('/:spotId/bookings', requireAuth, async(req,res) => {
 })
 
 //Edit a spot
-router.put('/:spotId', [requireAuth, validateSpot], async(req,res) => {
+router.put('/:spotId', [requireAuth, validateSpot, validateQuery], async(req,res) => {
   const { address, city, state, country, lat, lng, name, description, price } = req.body;
   const { user } = req;
   const id = req.params.spotId
