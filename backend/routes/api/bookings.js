@@ -92,7 +92,8 @@ router.put('/:bookingId', requireAuth, async (req, res) => {
     if (newStart >= newEnd) {
         res.status(400)
         res.json({
-            "message": "endDate cannot be on or before startDate"
+            "message": "Bad Request",
+            "errors": "endDate cannot be on or before startDate"
         })
     }
 
@@ -123,12 +124,12 @@ router.put('/:bookingId', requireAuth, async (req, res) => {
             err.errors.endDate = "End date conflicts with an existing booking"
         }
 
-        // if (newStart < bookingStart && newEnd > bookingEnd) {
-        //     errors.startDate = "Start date conflicts with an existing booking"
-        //     errors.endDate = "End date conflicts with an existing booking"
-        // }
+        if (newStart < bookingStart && newEnd > bookingEnd) {
+            err.errors.dateRange = 'There is an existing booking between your start and end date'
+        }
 
-        if (err.errors.startDate || err.errors.endDate) {
+
+        if (err.errors.startDate || err.errors.endDate || err.errors.dateRange) {
             res.status(403)
             return res.json(err)
         }
