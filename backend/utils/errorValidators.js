@@ -22,6 +22,8 @@ const validate = {
         .isDecimal()
         .withMessage("Longitude is not valid"),
       check('name')
+        .exists({checkFalsy: true})
+        .withMessage('Name is required')
         .isLength({Max: 50})
         .withMessage("Name must be less than 50 characters"),
       check('description')
@@ -29,8 +31,9 @@ const validate = {
         .withMessage("Description is required"),
       check('price')
         .exists()
+        .withMessage("Price per day is required")
         .isInt({min: 1})
-        .withMessage("Price per day is required"),
+        .withMessage('Price per day must be greater than 0'),
       handleValidationErrors
     ],
 
