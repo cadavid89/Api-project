@@ -46,7 +46,7 @@ router.get('/current', requireAuth, async(req,res) => {
         }
             // booking.startDate = booking.startDate.toISOString().slice(0,10)
             // booking.endDate = booking.endDate.toISOString().slice(0,10)
-            console.log(booking.startDate.toISOString().slice(0,10))
+            // console.log(booking.startDate.toISOString().slice(0,10))
     }
 
 
@@ -55,13 +55,13 @@ router.get('/current', requireAuth, async(req,res) => {
     })
 
     //Edit a booking
+
 router.put('/:bookingId', requireAuth, async (req, res) => {
-    const id = req.params.bookingId
     const { user } = req
     let {startDate, endDate} = req.body
     const {bookingId} = req.params
 
-    const booking = await Booking.findByPk(id)
+    const booking = await Booking.findByPk(bookingId)
 
     if (!booking){
         res.status(404)
@@ -77,9 +77,10 @@ router.put('/:bookingId', requireAuth, async (req, res) => {
         })
     }
 
-    const today = new Date().getTime()
+    const today = Date.now()
     const newStart = new Date(startDate).getTime();
     const newEnd = new Date(endDate).getTime();
+
 
     if (today > newEnd) {
         res.status(403)
@@ -88,10 +89,10 @@ router.put('/:bookingId', requireAuth, async (req, res) => {
         })
     }
 
-    if (new Date(startDate) >= new Date(endDate)) {
+    if (newStart >= newEnd) {
         res.status(400)
         res.json({
-            "message": "endDate cannot come before startDate"
+            "message": "endDate cannot be on or before startDate"
         })
     }
 
@@ -104,40 +105,41 @@ router.put('/:bookingId', requireAuth, async (req, res) => {
 
     const bookingObj = bookings.map(booking => booking.toJSON())
 
+    const err = {}
+    err.message = "Sorry, this spot is already booked for the specified dates"
+    err.errors = {}
     for (let i = 0; i < bookingObj.length; i++) {
 
-        const errors = {}
-        errors.message = "Sorry, this spot is already booked for the specified dates"
 
-        const bookingStart = new Date(booking.startDate).getTime()
-        const bookingEnd = new Date(booking.endDate).getTime()
+        const bookingStart = new Date(bookingObj[i].startDate).getTime()
+        const bookingEnd = new Date(bookingObj[i].endDate).getTime()
 
 
-        if (newStart >= bookingStart && newStart < bookingEnd) {
-            errors.startDate = "Start date conflicts with an existing booking"
+        if (newStart >= bookingStart && newStart <= bookingEnd) {
+            err.errors.startDate = "Start date conflicts with an existing booking"
         }
 
-        if (newEnd <= bookingStart && newEnd > bookingEnd) {
-            errors.endDate = "End date conflicts with an existing booking"
+        if (newEnd <= bookingStart && newEnd <= bookingEnd) {
+            err.errors.endDate = "End date conflicts with an existing booking"
         }
 
-        if (newStart < bookingStart && newEnd > bookingEnd) {
-            errors.startDate = "Start date conflicts with an existing booking"
-            errors.endDate = "End date conflicts with an existing booking"
-        }
+        // if (newStart < bookingStart && newEnd > bookingEnd) {
+        //     errors.startDate = "Start date conflicts with an existing booking"
+        //     errors.endDate = "End date conflicts with an existing booking"
+        // }
 
-        if (errors.startDate || errors.endDate) {
+        if (err.errors.startDate || err.errors.endDate) {
             res.status(403)
-            return res.json(errors)
+            return res.json(err)
         }
     }
 
     if(startDate) {
-        booking.startDate = startDate
+        booking.startDate = new Date(startDate)
     }
 
     if(endDate){
-        booking.endDate = endDate
+        booking.endDate = new Date(endDate)
     }
 
     await booking.save()
