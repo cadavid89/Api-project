@@ -42,11 +42,7 @@ router.get('/current', requireAuth, async(req,res) => {
                 booking.Spot.previewImage = "Image not available"
             }
         }
-            // booking.startDate = booking.startDate.toISOString().slice(0,10)
-            // booking.endDate = booking.endDate.toISOString().slice(0,10)
-            // console.log(booking.startDate.toISOString().slice(0,10))
     }
-
 
         res.json({
             "Bookings": bookingObject})
@@ -134,11 +130,11 @@ router.put('/:bookingId', requireAuth, async (req, res) => {
     }
 
     if(startDate) {
-        booking.startDate = new Date(startDate)
+        booking.startDate = startDate
     }
 
     if(endDate){
-        booking.endDate = new Date(endDate)
+        booking.endDate = endDate
     }
 
     await booking.save()
