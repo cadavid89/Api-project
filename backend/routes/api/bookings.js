@@ -85,7 +85,7 @@ router.put('/:bookingId', requireAuth, async (req, res) => {
 
     if (newStart >= newEnd) {
         res.status(400)
-        res.json({
+        return res.json({
             "message": "Bad Request",
             "errors": "endDate cannot be on or before startDate"
         })
@@ -101,8 +101,7 @@ router.put('/:bookingId', requireAuth, async (req, res) => {
     const bookingObj = bookings.map(booking => booking.toJSON())
 
     const err = {}
-    err.message = "Sorry, this spot is already booked for the specified dates"
-    err.errors = {}
+
     for (let i = 0; i < bookingObj.length; i++) {
 
 
@@ -111,21 +110,24 @@ router.put('/:bookingId', requireAuth, async (req, res) => {
 
 
         if (newStart >= bookingStart && newStart <= bookingEnd) {
-            err.errors.startDate = "Start date conflicts with an existing booking"
+            err.startDate = "Start date conflicts with an existing booking"
         }
 
         if (newEnd >= bookingStart && newEnd <= bookingEnd) {
-            err.errors.endDate = "End date conflicts with an existing booking"
+            err.endDate = "End date conflicts with an existing booking"
         }
 
         if (newStart < bookingStart && newEnd > bookingEnd) {
-            err.errors.dateRange = 'There is an existing booking between your start and end date'
+            err.dateRange = 'There is an existing booking between your start and end date'
         }
 
 
-        if (err.errors.startDate || err.errors.endDate || err.errors.dateRange) {
+        if (Object.keys(err).length) {
             res.status(403)
-            return res.json(err)
+            return res.json({
+               message: "Sorry, this spot is already booked for the specified dates",
+               errors: {...err}
+            })
         }
     }
 
