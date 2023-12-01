@@ -218,7 +218,7 @@ router.get('/:spotId', async (req,res, next) => {
   const id = req.params.spotId
 
   const spot = await Spot.findByPk(id)
-
+  console.log(spot)
    if(!spot) {
     res.status(404);
     return res.json({
@@ -267,11 +267,11 @@ router.get('/:spotId', async (req,res, next) => {
       }
     })
 
-    spotJson.forEach(spot => {
-      spot.lat = Number(spot.lat),
-      spot.lng = Number(spot.lng),
-      spot.price = Number(spot.price)
-    })
+
+      spotJson.lat = Number(spot.lat)
+      spotJson.lng = Number(spot.lng)
+      spotJson.price = Number(spot.price)
+
 
     return res.json(spotJson)
 })
