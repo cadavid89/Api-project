@@ -70,6 +70,12 @@ router.get('/', validateQuery, async (req,res,next) => {
     delete spot.SpotImages
   }
 
+  spotObj.forEach(spot => {
+    spot.lat = Number(spot.lat),
+    spot.lng = Number(spot.lng),
+    spot.price = Number(spot.price)
+  })
+
   res.json({
     Spots: spotObj,
     page: Number(page),
@@ -196,6 +202,12 @@ router.get('/current', requireAuth, async (req, res, next) => {
 
     spot.avgRating = avgStarRating;
 }
+
+spotsJson.forEach(spot => {
+  spot.lat = Number(spot.lat),
+  spot.lng = Number(spot.lng),
+  spot.price = Number(spot.price)
+})
 return res.json({
   Spots: spotsJson
 })
@@ -255,6 +267,12 @@ router.get('/:spotId', async (req,res, next) => {
       }
     })
 
+    spotJson.forEach(spot => {
+      spot.lat = Number(spot.lat),
+      spot.lng = Number(spot.lng),
+      spot.price = Number(spot.price)
+    })
+
     return res.json(spotJson)
 })
 
@@ -276,6 +294,10 @@ router.post('/', [requireAuth, validateSpot, validateQuery], async (req,res,next
   price,
  })
 
+ newSpotJson = newSpot.toJSON()
+ newSpotJson.lat = Number(newSpotJson.lat)
+ newSpotJson.lng = Number(newSpotJson.lng)
+ newSpotJson.price = Number(newSpotJson.price)
 res.status(201)
  return res.json(newSpot)
 })
@@ -474,6 +496,11 @@ router.put('/:spotId', [requireAuth, validateSpot, validateQuery], async(req,res
   spot.price = price
 
   await spot.save()
+
+  spotJson = spot.toJSON()
+  spotJson.lat = Number(spotJson.lat);
+  spotJson.lng = Number(spotJson.lng);
+  spotJson.price = Number(spotJson.price);
 
   return res.json(spot)
 })
