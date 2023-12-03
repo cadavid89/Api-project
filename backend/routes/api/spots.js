@@ -405,14 +405,14 @@ router.post('/:spotId/bookings', requireAuth, async(req,res) => {
 
   if(!spot){
     res.status(404)
-    res.json({
+    return res.json({
       "message": "Spot couldn't be found"
     })
   }
 
   if(spot.ownerId === user.id){
     res.status(403);
-    res.json({
+     return res.json({
       "message": "Forbidden"
     })
   }
@@ -431,10 +431,12 @@ router.post('/:spotId/bookings', requireAuth, async(req,res) => {
     err.errors = {}
     err.message = 'Sorry, this spot is already booked for the specified dates'
 
-    let responseStart = new Date(booking.startDate).toDateString()
-    let responseEnd = new Date(booking.endDate).toDateString()
-    responseStart = new Date(responseStart).getTime()
-    responseEnd = new Date(responseEnd).getTime()
+
+
+    let responseStart = new Date(booking.startDate).getTime()
+    let responseEnd = new Date(booking.endDate).getTime()
+    // responseStart = new Date(responseStart).getTime()
+    // responseEnd = new Date(responseEnd).getTime()
 
     if(requestedStart < responseStart && requestedEnd > responseEnd) {
       err.errors.dateRange = "Existing booking between start and end dates"

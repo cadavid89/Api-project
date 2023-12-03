@@ -28,6 +28,11 @@ router.get('/current', requireAuth, async(req,res) => {
     for(let i = 0; i < bookingObject.length; i++){
         const booking = bookingObject[i];
 
+        booking.startDate = booking.startDate.toISOString().split('T')[0]
+        booking.endDate = booking.endDate.toISOString().split('T')[0]
+        booking.createdAt = booking.createdAt.toISOString().split('T')[0]
+        booking.updatedAt = booking.updatedAt.toISOString().split('T')[0]
+
         for (let j = 0; j < images.length; j++) {
             const image = images[j]
 
@@ -141,9 +146,14 @@ router.put('/:bookingId', requireAuth, async (req, res) => {
 
     await booking.save()
 
-    res.json({
-        booking
-    })
+    const currBookingObj = await booking.toJSON()
+
+    currBookingObj.startDate = currBookingObj.startDate.toISOString().split('T')[0]
+    currBookingObj.endDate = currBookingObj.endDate.toISOString().split('T')[0]
+    currBookingObj.createdAt = currBookingObj.createdAt.toISOString().split('T')[0]
+    currBookingObj.updatedAt = currBookingObj.updatedAt.toISOString().split('T')[0]
+
+   return res.json(currBookingObj)
 
 
 })
