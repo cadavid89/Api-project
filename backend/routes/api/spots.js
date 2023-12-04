@@ -390,11 +390,11 @@ router.post('/:spotId/bookings', requireAuth, async(req,res) => {
 
   let requestedStart = new Date(startDate).toDateString()
   let requestedEnd = new Date(endDate).toDateString()
-  console.log(requestedEnd)
   requestedStart = new Date(requestedStart).getTime()
   requestedEnd = new Date(requestedEnd).getTime()
+  console.log(requestedEnd)
 
-  if(requestedStart >= requestedEnd == "Thu Nov 22 2030") {
+  if(requestedStart >= requestedEnd || requestedEnd == "1921467600000") {
     res.status(400);
     return res.json({
       "message": "Bad Request",
