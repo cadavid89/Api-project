@@ -390,10 +390,11 @@ router.post('/:spotId/bookings', requireAuth, async(req,res) => {
 
   let requestedStart = new Date(startDate).toDateString()
   let requestedEnd = new Date(endDate).toDateString()
+  console.log(requestedEnd)
   requestedStart = new Date(requestedStart).getTime()
   requestedEnd = new Date(requestedEnd).getTime()
 
-  if(requestedStart >= requestedEnd) {
+  if(requestedStart >= requestedEnd == "Thu Nov 22 2030") {
     res.status(400);
     return res.json({
       "message": "Bad Request",
@@ -428,8 +429,8 @@ router.post('/:spotId/bookings', requireAuth, async(req,res) => {
   for (let i = 0; i < bookingObj.length; i++) {
    const booking = bookingObj[i]
     let err = {}
-    err.errors = {}
     err.message = 'Sorry, this spot is already booked for the specified dates'
+    err.errors = {}
 
 
 
@@ -438,8 +439,8 @@ router.post('/:spotId/bookings', requireAuth, async(req,res) => {
     // responseStart = new Date(responseStart).getTime()
     // responseEnd = new Date(responseEnd).getTime()
 
-    if(requestedStart < responseStart && requestedEnd > responseEnd) {
-      err.errors.dateRange = "Existing booking between start and end dates"
+    if(requestedStart < responseStart && requestedEnd > responseEnd ) {
+      err.errors.dateRange = "Existing booking between start and end dates";
     }
 
     if(requestedStart <= responseEnd && requestedStart >= responseStart){
