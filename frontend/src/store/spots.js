@@ -2,7 +2,7 @@ import { csrfFetch } from "./csrf";
 
 const ALL_SPOTS = 'spots/ALL_SPOTS'
 
-//action 
+//action
 export const getAllSpots = (spots) => {
     return {
         type: ALL_SPOTS,
@@ -19,3 +19,21 @@ export const allSpotsThunk = () => async (dispatch) => {
         return spots
     }
 }
+
+//reducer
+const spotReducer = (state = {}, action) => {
+    switch(action.type) {
+        case ALL_SPOTS: {
+            const newState = {};
+            action.spots.Spots.forEach((spot) => {
+                newState[spot.id] = spot
+            })
+            return newState
+        }
+        default: {
+            return state
+        }
+    }
+}
+
+export default spotReducer
