@@ -1,0 +1,8 @@
+.spot-card {
+    display: flex;
+    flex-direction: column;
+    height: 300px;
+    width: 250px;
+    padding: 10px;
+    cursor: pointer;
+}

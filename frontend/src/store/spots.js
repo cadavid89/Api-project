@@ -77,7 +77,7 @@ export const currUserSpotThunk = () => async (dispatch) => {
     if (res.ok) {
         const spots = await res.json()
         dispatch(getAllSpots(spots))
-        return spot
+        return spots
     }
 }
 
@@ -134,6 +134,8 @@ const spotReducer = (state = {}, action) => {
             })
             return newState
         }
+        case CURR_USER_SPOTS:
+            return {state}
         case SINGLE_SPOT:
             return {...state, [action.spot.id]: action.spot}
         case CREATE_SPOT:
@@ -141,9 +143,9 @@ const spotReducer = (state = {}, action) => {
         case EDIT_SPOT:
             return {...state, [action.spot.id]: action.spot}
         case DELETE_SPOT:
-            const newRef = {...state}
-            delete newRef[action.spotId]
-            return newRef
+            const newState= {...state}
+            delete newState[action.spotId]
+            return newState
         default:
             return state
         }
