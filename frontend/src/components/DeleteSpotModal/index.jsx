@@ -1,7 +1,7 @@
 import { deleteSpotThunk } from "../../store/spots";
 import { useNavigate } from "react-router-dom";
 import { useModal } from "../../context/Modal";
-import { useDispatch } from "react-redux";
+import { useDispatch} from "react-redux";
 import React from "react";
 import "./DeleteSpotModal.css";
 
@@ -10,16 +10,19 @@ export default function DeleteSpotModal({ spot }) {
   const navigate = useNavigate();
   const { closeModal } = useModal();
 
-  const handleClick = (event) => {
+  const handleClick = async (event) => {
     event.preventDefault();
 
-    try {
-      dispatch(deleteSpotThunk(spot.id));
-      closeModal();
-      navigate("spots/current");
-    } catch (error) {
-      console.error(error);
-    }
+    await dispatch(deleteSpotThunk(spot.id).then(closeModal))
+
+    navigate('/')
+    // try {
+    //   dispatch(deleteSpotThunk(spot.id));
+    //   closeModal();
+    //   navigate("spots/current");
+    // } catch (error) {
+    //   console.error(error);
+    // }
   };
 
   return (

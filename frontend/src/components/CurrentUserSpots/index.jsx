@@ -47,7 +47,7 @@ export default function CurrentUserSpot() {
                 <SpotCard spot={spot} />
                 <button
                   className="manage-spot-update-button"
-                  onClick={editSpot}>
+                  onClick={(event) => editSpot(event, spot)}>
                   Update
                 </button>
                 <OpenModalButton

@@ -1,3 +1,10 @@
+.all-spots-main-container {
+    display: flex;
+    flex-flow: wrap;
+    max-width: 1000px;
+    margin: auto;
+}
+
 .spot-card {
     display: flex;
     flex-direction: column;
@@ -5,4 +12,28 @@
     width: 250px;
     padding: 10px;
     cursor: pointer;
+}
+
+.spot-card-img {
+    min-height: 90%;
+    max-height: 90%;
+    width: 100%;
+    border-radius: 10px;
+}
+
+.spot-card-text {
+    display: flex;
+    flex-direction: column;
+    height: 50px;
+}
+
+.spot-card-reviews {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.spot-card-price {
+    font-weight: 750;
+    font-size: 16px;
 }

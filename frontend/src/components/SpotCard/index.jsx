@@ -1,5 +1,6 @@
-import React from "react";
 import { useNavigate } from "react-router-dom";
+import React from "react";
+import './SpotCard.css'
 
 export default function SpotCard({ spot }) {
   const navigate = useNavigate();
