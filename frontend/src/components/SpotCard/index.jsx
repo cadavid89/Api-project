@@ -6,7 +6,7 @@ export default function SpotCard({ spot }) {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate("spots/${spot.id}");
+    navigate("/spots/${spot.id}");
   };
 
   return (

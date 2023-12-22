@@ -22,12 +22,12 @@ const DELETE_SPOT = 'spots/DELETE_SPOT'
     }
 }
 
- const getCurrUserSpots = (spots) => {
-    return {
-        type: CURR_USER_SPOTS,
-        spots
-    }
-}
+//  const getCurrUserSpots = (spots) => {
+//     return {
+//         type: CURR_USER_SPOTS,
+//         spots
+//     }
+// }
 
   const createSpot = (spot) => {
     return {
@@ -107,10 +107,21 @@ export const editSpotThunk = (spotId, payload) => async (dispatch) => {
     if (res.ok) {
         const spot = await res.json()
         dispatch(editSpot(spot))
+        return spot
     } else {
         const errors = await res.json()
         return errors
     }
+}
+
+export const addSpotImagesThunk = (spotId, spotImages) => async (dispatch) => {
+    console.log('in thunk', spotImages)
+    await spotImages.forEach(image => {
+        csrfFetch(`/api/spots/${spotId}/images`, {
+            method: 'POST',
+            body: JSON.stringify({...image})
+        })
+    })
 }
 
 export const deleteSpotThunk = (spotId) => async (dispatch) => {

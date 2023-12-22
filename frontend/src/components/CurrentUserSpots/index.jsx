@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 import SpotCard from "../SpotCard";
 import OpenModalButton from "../OpenModalButton";
 import DeleteSpotModal from "../DeleteSpotModal";
+import { addSpotImagesThunk } from "../../store/spots";
+
 
 export default function CurrentUserSpot() {
   const dispatch = useDispatch();
@@ -13,6 +15,7 @@ export default function CurrentUserSpot() {
   const spots = useSelector((state) => state.spots);
   const spotsArr = Object.values(spots);
 
+    
   useEffect(() => {
     if (user) dispatch(currUserSpotThunk());
   }, [dispatch]);

@@ -35,7 +35,7 @@ function Navigation({ isLoaded }) {
     <ul>
       <li>
         <NavLink exact to="/" className="nav-home">
-          <i class="fa-brands fa-airbnb"></i>Spot Renter
+          <i className="profile-button" class="fa-brands fa-airbnb"></i>Spot Renter
         </NavLink>
       </li>
       {isLoaded && sessionLinks}

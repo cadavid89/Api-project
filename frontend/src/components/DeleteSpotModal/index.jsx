@@ -1,3 +1,4 @@
+
 import { deleteSpotThunk } from "../../store/spots";
 import { useNavigate } from "react-router-dom";
 import { useModal } from "../../context/Modal";
@@ -15,7 +16,7 @@ export default function DeleteSpotModal({ spot }) {
 
     await dispatch(deleteSpotThunk(spot.id).then(closeModal))
 
-    navigate('/')
+    history.push('/spots/current')
     // try {
     //   dispatch(deleteSpotThunk(spot.id));
     //   closeModal();
