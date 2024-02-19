@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { currUserSpotThunk } from "../../store/spots";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import SpotCard from "../SpotCard";
+// import SpotCard from "../SpotCard";
 import OpenModalButton from "../OpenModalButton";
 import DeleteSpotModal from "../DeleteSpotModal";
 import { addSpotImagesThunk } from "../../store/spots";
@@ -15,7 +15,7 @@ export default function CurrentUserSpot() {
   const spots = useSelector((state) => state.spots);
   const spotsArr = Object.values(spots);
 
-    
+
   useEffect(() => {
     if (user) dispatch(currUserSpotThunk());
   }, [dispatch]);
