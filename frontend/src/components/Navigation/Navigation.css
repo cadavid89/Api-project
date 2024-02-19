@@ -1,3 +1,21 @@
 .hidden {
     display: none
 }
+
+.nav-home {
+    height: 60px;
+    width: 60 px;
+}
+
+.profile-button {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-around;
+    align-items: center;
+    border-radius: 30px;
+    width: 70px;
+    height: 40px;
+    font-size: 20px;
+    background-color: white;
+}

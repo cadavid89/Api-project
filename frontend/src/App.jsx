@@ -1,11 +1,16 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom';
+import { BrowserRouter, createBrowserRouter, RouterProvider, Outlet, Route, Routes } from 'react-router-dom';
 import Navigation from './components/Navigation';
 import * as sessionActions from './store/session';
 import AllSpots from './components/AllSpots';
+import CurrentUserSpot from './components/CurrentUserSpots';
+import SpotDetail from './components/SpotDetail';
+import EditSpotForm from './components/EditSpotForm';
+import CreateSpotForm from './components/CreateSpotForm';
+import { Modal } from './context/Modal';
 
-function Layout() {
+function App() {
   const dispatch = useDispatch();
   const [isLoaded, setIsLoaded] = useState(false);
 
@@ -15,28 +20,65 @@ function Layout() {
     });
   }, [dispatch]);
 
-  return (
-    <>
-      <Navigation isLoaded={isLoaded} />
-      {isLoaded && <Outlet />}
-    </>
-  );
-}
+    return (
+      <>
+      <BrowserRouter>
+       <Navigation isLoaded={isLoaded} />
+       <Modal />
+       {isLoaded && (
+        <Routes>
+        //         <Route path="/" element={<AllSpots />} />
+        //         <Route path="/spots/new" element={<CreateSpotForm />} />
+        //         <Route path="/spots/current" element={<CurrentUserSpot />} />
+        //         <Route path="/spots/:spotId/edit" element={<EditSpotForm />} />
+        //         <Route path="/spots/:spotId" element={<SpotDetail />} />
+        //         <Route path="*" element={<h1>Page Not Found</h1>} />
+        //       </Routes>
+       )}
+      </BrowserRouter>
+      </>
 
-const router = createBrowserRouter([
-  {
-    element: <Layout />,
-    children: [
-      {
-        path: '/',
-        element: <AllSpots />
-      }
-    ]
-  }
-]);
+    )}
 
-function App() {
-  return <RouterProvider router={router} />;
-}
 
-export default App;
+//   return (
+//     <>
+//       <Navigation isLoaded={isLoaded} />
+//       {isLoaded && <Outlet />}
+//     </>
+//   );
+// }
+
+// const router = createBrowserRouter([
+//   {
+//     element: <Layout />,
+//     children: [
+//       {
+//         path: '/',
+//         element: <AllSpots />
+//       },
+//       {
+//         path: '/spots/current',
+//         element: <CurrentUserSpot />
+//       },
+//       {
+//         path: '/spots/:spotId',
+//         element: <SpotDetail />
+//       },
+//       {
+//         path: '/spots/:spotId/edit',
+//         element: <EditSpotForm />
+//       },
+//       {
+//         path: 'spots/new',
+//         element: <CreateSpotForm />
+//       }
+//     ]
+//   }
+// ]);
+
+// function App() {
+//   return <RouterProvider router={router} />;
+// }
+
+export default App
