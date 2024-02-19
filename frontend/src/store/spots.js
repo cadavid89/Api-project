@@ -114,7 +114,7 @@ export const editSpotThunk = (spotId, payload) => async (dispatch) => {
     }
 }
 
-export const addSpotImagesThunk = (spotId, spotImages) => async (dispatch) => {
+export const addSpotImagesThunk = (spotId, spotImages) => async () => {
     console.log('in thunk', spotImages)
     await spotImages.forEach(image => {
         csrfFetch(`/api/spots/${spotId}/images`, {
@@ -154,7 +154,7 @@ const spotReducer = (state = {}, action) => {
         case EDIT_SPOT:
             return {...state, [action.spot.id]: action.spot}
         case DELETE_SPOT:
-            const newState= {...state}
+            const newState = {...state}
             delete newState[action.spotId]
             return newState
         default:

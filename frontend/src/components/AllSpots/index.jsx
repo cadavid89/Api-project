@@ -1,7 +1,7 @@
 import { useSelector, useDispatch } from 'react-redux'
 import { allSpotsThunk } from '../../store/spots'
 import React, {useEffect} from 'react'
-// import SpotCard from '../SpotCard'
+import SpotCard from '../SpotCard'
 import './AllSpots.css'
 
 
